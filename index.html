@@ -2,70 +2,95 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Prometric Nurse Technician Exam</title>
+<title>SCFHS Prometric Fast-Fail System</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body { font-family: Arial, sans-serif; background:#f4f6f8; padding:20px; }
-.card { background:#fff; padding:20px; max-width:800px; margin:auto; border-radius:8px; }
+.card { background:#fff; padding:20px; max-width:900px; margin:auto; border-radius:8px; }
 .hidden { display:none; }
 button { margin-top:10px; padding:10px; width:100%; }
 .fail { color:red; font-weight:bold; }
 .pass { color:green; font-weight:bold; }
+table { width:100%; border-collapse:collapse; margin-top:15px; }
+th, td { border:1px solid #ccc; padding:8px; text-align:left; }
+th { background:#eee; }
 </style>
 </head>
 
 <body>
 
+<!-- START SCREEN -->
 <div class="card" id="startScreen">
   <h2>Prometric Nurse Technician Exam</h2>
   <p>Focus: Safety, ABC, Scope, Immediate Action</p>
-  <input id="userName" type="text" placeholder="Enter your name">
+  <input id="candidateName" type="text" placeholder="Enter your name">
   <button onclick="startExam()">Start Exam</button>
 </div>
 
+<!-- EXAM SCREEN -->
 <div class="card hidden" id="examScreen">
   <h3 id="qNo"></h3>
   <p id="qText"></p>
   <div id="options"></div>
 </div>
 
+<!-- RESULT SCREEN -->
 <div class="card hidden" id="resultScreen">
-  <h3>Result</h3>
+  <h3>Exam Result</h3>
   <p id="resultText"></p>
   <p id="reasonText"></p>
   <p id="nameText"></p>
+  <button onclick="showDashboard()">Instructor Dashboard</button>
+</div>
+
+<!-- INSTRUCTOR DASHBOARD -->
+<div class="card hidden" id="dashboard">
+  <h3>Instructor Dashboard</h3>
+  <table>
+    <tr>
+      <th>Candidate Name</th>
+      <th>Result</th>
+      <th>Unsafe Pattern</th>
+    </tr>
+    <tr>
+      <td id="dName"></td>
+      <td id="dResult"></td>
+      <td id="dRisk"></td>
+    </tr>
+  </table>
 </div>
 
 <script>
-let name = "";
+let candidateName = "";
 let current = 0;
 let failed = false;
-let failReason = "";
+let failReason = "None";
 
 const questions = [
   {
     q: "Patient suddenly becomes cyanotic with SpO₂ 82%. Priority action?",
     options: [
-      { t: "Document oxygen saturation", unsafe: true, reason: "Documentation delay" },
-      { t: "Notify physician", unsafe: true, reason: "Waiting for orders" },
-      { t: "Apply oxygen and assess airway", unsafe: false },
-      { t: "Continue to monitor", unsafe: true, reason: "Delayed action" }
+      { t: "Document oxygen saturation", unsafe:true, reason:"Documentation delay" },
+      { t: "Notify physician", unsafe:true, reason:"Waiting for orders" },
+      { t: "Apply oxygen and assess airway", unsafe:false },
+      { t: "Continue to monitor", unsafe:true, reason:"Delayed action" }
     ]
   },
   {
     q: "Patient choking and unable to speak. First action?",
     options: [
-      { t: "Assess vital signs", unsafe: true, reason: "Skipped airway" },
-      { t: "Call physician", unsafe: true, reason: "Delay" },
-      { t: "Perform abdominal thrusts", unsafe: false },
-      { t: "Document condition", unsafe: true, reason: "Documentation reflex" }
+      { t: "Assess vital signs", unsafe:true, reason:"Skipped airway" },
+      { t: "Call physician", unsafe:true, reason:"Delay" },
+      { t: "Perform abdominal thrusts", unsafe:false },
+      { t: "Document condition", unsafe:true, reason:"Documentation reflex" }
     ]
   }
+  /* QUESTIONS 3–100 CONTINUE SAME STRUCTURE */
 ];
 
 function startExam() {
-  name = document.getElementById("userName").value;
+  candidateName = document.getElementById("candidateName").value || "Unnamed";
   document.getElementById("startScreen").classList.add("hidden");
   document.getElementById("examScreen").classList.remove("hidden");
   loadQuestion();
@@ -73,14 +98,11 @@ function startExam() {
 
 function loadQuestion() {
   if (current >= questions.length || failed) return endExam();
-
   const q = questions[current];
   document.getElementById("qNo").innerText = "Question " + (current + 1);
   document.getElementById("qText").innerText = q.q;
-
   const opt = document.getElementById("options");
   opt.innerHTML = "";
-
   q.options.forEach(o => {
     const b = document.createElement("button");
     b.innerText = o.t;
@@ -106,10 +128,17 @@ function endExam() {
     failed ? "<span class='fail'>FAIL</span>" : "<span class='pass'>PASS</span>";
 
   document.getElementById("reasonText").innerText =
-    failed ? "Reason: " + failReason : "Safe decision-making.";
+    failed ? "Unsafe decision: " + failReason : "Safe decision-making.";
 
   document.getElementById("nameText").innerText =
-    "Candidate name: " + (name || "Not provided");
+    "Candidate name: " + candidateName;
+}
+
+function showDashboard() {
+  document.getElementById("dashboard").classList.remove("hidden");
+  document.getElementById("dName").innerText = candidateName;
+  document.getElementById("dResult").innerText = failed ? "FAIL" : "PASS";
+  document.getElementById("dRisk").innerText = failed ? failReason : "None";
 }
 </script>
 
