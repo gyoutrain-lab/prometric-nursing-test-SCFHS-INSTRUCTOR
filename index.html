@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SCFHS Prometric Fast-Fail System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+}
+.container {
+  max-width: 900px;
+  margin: auto;
+  background: #fff;
+  padding: 20px;
+  min-height: 100vh;
+}
+h1, h2 {
+  color: #b00020;
+}
+.option {
+  border: 1px solid #ccc;
+  padding: 12px;
+  margin: 10px 0;
+  cursor: pointer;
+}
+.option:hover {
+  background: #eee;
+}
+.timer {
+  font-weight: bold;
+  color: #b00020;
+}
+.hidden { display: none; }
+.fail { color: red; font-weight: bold; }
+.pass { color: green; font-weight: bold; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+th {
+  background: #eee;
+}
+button {
+  padding: 10px 16px;
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<!-- HOME -->
+<div id="home">
+  <h1>SCFHS Prometric Fast-Fail System</h1>
+  <button onclick="showExam()">Start Exam</button>
+  <button onclick="showDashboard()">Instructor Dashboard</button>
+</div>
+
+<!-- LOGIN -->
+<div id="login" class="hidden">
+  <h2>Candidate Login</h2>
+  <input id="userId" placeholder="Enter User ID">
+  <button onclick="startExam()">Begin</button>
+</div>
+
+<!-- EXAM -->
+<div id="exam" class="hidden">
+  <p>User: <span id="userDisplay"></span></p>
+  <p class="timer">Time left: <span id="time">10</span>s</p>
+  <h2 id="moduleTitle"></h2>
+  <div id="questionBox"></div>
+</div>
+
+<!-- RESULT -->
+<div id="result" class="hidden">
+  <h1 id="resultTitle"></h1>
+  <p id="resultText"></p>
+  <button onclick="location.reload()">Exit</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="hidden">
+  <h1>Instructor Dashboard</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>Result</th>
+        <th>Risk Pattern</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+    <tbody id="dashTable"></tbody>
+  </table>
+  <button onclick="location.reload()">Exit</button>
+</div>
+
+</div>
+
+<script>
+/* ================= QUESTION BANK (SHORTENED DEMO)
+   Add remaining questions following same pattern
+=============================================== */
+
+const questions = [
+{
+ module:"AIRWAY", level:"EASY",
+ stem:"Patient suddenly becomes cyanotic with SpO₂ 82%.",
+ options:[
+  {text:"Document oxygen saturation", correct:false, reason:"Documentation during hypoxia"},
+  {text:"Notify physician", correct:false, reason:"Waiting for orders"},
+  {text:"Apply oxygen and assess airway", correct:true},
+  {text:"Reassure and monitor", correct:false, reason:"Reassurance during instability"}
+ ]
+},
+{
+ module:"AIRWAY", level:"AUTOFAIL",
+ stem:"Unconscious patient with snoring respirations.",
+ options:[
+  {text:"Document findings", correct:false, reason:"Dangerous delay"},
+  {text:"Wait for physician", correct:false, reason:"Unsafe waiting"},
+  {text:"Open airway and activate emergency response", correct:true},
+  {text:"Monitor closely", correct:false, reason:"Airway obstruction ignored"}
+ ]
+},
+{
+ module:"CIRCULATION", level:"AUTOFAIL",
+ stem:"Post-op patient suddenly pale and hypotensive.",
+ options:[
+  {text:"Document vital signs", correct:false, reason:"Hemorrhage delay"},
+  {text:"Wait for labs", correct:false, reason:"Life-threatening delay"},
+  {text:"Initiate emergency response", correct:true},
+  {text:"Notify physician only", correct:false, reason:"Incomplete response"}
+ ]
+},
+{
+ module:"SCOPE", level:"AUTOFAIL",
+ stem:"Ordered to perform IV medication outside technician scope.",
+ options:[
+  {text:"Follow order", correct:false, reason:"Scope violation"},
+  {text:"Document order", correct:false, reason:"Unsafe compliance"},
+  {text:"Refuse and escalate", correct:true},
+  {text:"Delay action", correct:false, reason:"Avoidance"}
+ ]
+}
+];
+
+/* ================= EXAM ENGINE ================= */
+
+let idx = 0;
+let timeLeft = 10;
+let timer;
+let failed = false;
+let user = "";
+let failReason = "";
+
+function showExam() {
+  home.hidden = true;
+  login.hidden = false;
+}
+function showDashboard() {
+  home.hidden = true;
+  dashboard.hidden = false;
+  loadDashboard();
+}
+
+function startExam() {
+  user = userId.value;
+  if (!user) return alert("Enter User ID");
+  userDisplay.innerText = user;
+  login.hidden = true;
+  exam.hidden = false;
+  loadQuestion();
+}
+
+function loadQuestion() {
+  if (idx >= questions.length || failed) return endExam();
+  timeLeft = 10;
+  time.innerText = timeLeft;
+  const q = questions[idx];
+  moduleTitle.innerText = q.module + " — " + q.level;
+  questionBox.innerHTML = "<p>" + q.stem + "</p>";
+
+  q.options.forEach(o => {
+    const div = document.createElement("div");
+    div.className = "option";
+    div.innerText = o.text;
+    div.onclick = () => answer(o, q);
+    questionBox.appendChild(div);
+  });
+
+  timer = setInterval(() => {
+    timeLeft--;
+    time.innerText = timeLeft;
+    if (timeLeft <= 0) fail("Time expired — unsafe delay");
+  }, 1000);
+}
+
+function answer(opt, q) {
+  clearInterval(timer);
+  if (!opt.correct) {
+    if (q.level === "AUTOFAIL" || q.module === "AIRWAY") {
+      fail(opt.reason);
+      return;
+    }
+  }
+  idx++;
+  loadQuestion();
+}
+
+function fail(reason) {
+  failed = true;
+  failReason = reason;
+  endExam();
+}
+
+function endExam() {
+  exam.hidden = true;
+  result.hidden = false;
+
+  const record = {
+    user, result: failed ? "FAIL" : "PASS",
+    reason: failReason,
+    time: new Date().toLocaleString()
+  };
+
+  let data = JSON.parse(localStorage.getItem("results")) || [];
+  data.push(record);
+  localStorage.setItem("results", JSON.stringify(data));
+
+  resultTitle.innerText = failed ? "FAIL ❌" : "PASS ✅";
+  resultText.innerHTML = failed
+    ? `Reason: ${failReason}<br>Unsafe decision profile`
+    : "Safe decision-making demonstrated";
+}
+
+/* ================= DASHBOARD ================= */
+
+function loadDashboard() {
+  const rows = JSON.parse(localStorage.getItem("results")) || [];
+  dashTable.innerHTML = "";
+  rows.forEach(r => {
+    const risk =
+      r.reason.includes("delay") ? "Delay Bias" :
+      r.reason.includes("Document") ? "Documentation Reflex" :
+      r.reason.includes("scope") ? "Scope Violation" :
+      r.reason.includes("airway") ? "ABC Violation" :
+      r.reason ? "Unsafe Decision" : "Safe";
+
+    dashTable.innerHTML += `
+      <tr>
+        <td>${r.user}</td>
+        <td class="${r.result === "FAIL" ? "fail" : "pass"}">${r.result}</td>
+        <td>${risk}</td>
+        <td>${r.time}</td>
+      </tr>`;
+  });
+}
+</script>
+</body>
+</html>
