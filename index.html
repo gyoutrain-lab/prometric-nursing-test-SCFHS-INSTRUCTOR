@@ -2,6 +2,222 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>Prometric Nurse Technician Fast-Fail Exam</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+  padding: 20px;
+}
+h1, h2 {
+  color: #b00020;
+}
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 900px;
+  margin: auto;
+}
+button {
+  padding: 10px 16px;
+  margin-top: 10px;
+}
+.hidden {
+  display: none;
+}
+.fail {
+  color: red;
+  font-weight: bold;
+}
+.pass {
+  color: green;
+  font-weight: bold;
+}
+.option {
+  margin: 8px 0;
+}
+.dashboard table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.dashboard th, .dashboard td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+.dashboard th {
+  background: #eee;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="startScreen">
+  <h1>Prometric Nurse Technician Exam</h1>
+  <p>Focus: Safety, ABC, Scope, Immediate Action</p>
+  <input id="userId" placeholder="Enter User ID">
+  <br>
+  <button onclick="startExam()">Start Exam</button>
+</div>
+
+<div class="card hidden" id="examScreen">
+  <h2 id="qNumber"></h2>
+  <p id="questionText"></p>
+  <div id="options"></div>
+</div>
+
+<div class="card hidden" id="resultScreen">
+  <h2>Exam Result</h2>
+  <p id="finalResult"></p>
+  <p id="failReason"></p>
+  <button onclick="showDashboard()">Instructor Dashboard</button>
+</div>
+
+<div class="card hidden dashboard" id="dashboard">
+  <h2>Instructor Dashboard</h2>
+  <table>
+    <tr>
+      <th>User ID</th>
+      <th>Result</th>
+      <th>Risk Pattern</th>
+    </tr>
+    <tr>
+      <td id="dUser"></td>
+      <td id="dResult"></td>
+      <td id="dRisk"></td>
+    </tr>
+  </table>
+</div>
+
+<script>
+let user = "";
+let current = 0;
+let failed = false;
+let failReason = "";
+
+const questions = [
+/* ===== MODULE: AIRWAY ===== */
+{
+ q: "Patient suddenly becomes cyanotic with SpO₂ 82%. What is the priority action?",
+ options: [
+  { t: "Document oxygen saturation finding", unsafe: true, reason: "Documentation delay" },
+  { t: "Notify physician of abnormal SpO₂", unsafe: true, reason: "Waiting for orders" },
+  { t: "Apply oxygen and assess airway patency", unsafe: false },
+  { t: "Continue to monitor closely", unsafe: true, reason: "Delayed action" }
+ ]
+},
+
+{
+ q: "Patient is choking and unable to speak. What should you do first?",
+ options: [
+  { t: "Call rapid response team", unsafe: true, reason: "Delay" },
+  { t: "Assess vital signs thoroughly", unsafe: true, reason: "Skipped airway" },
+  { t: "Perform abdominal thrusts", unsafe: false },
+  { t: "Document airway obstruction", unsafe: true, reason: "Documentation reflex" }
+ ]
+},
+
+/* ===== MODULE: CIRCULATION ===== */
+{
+ q: "Post-op patient reports dizziness and pale skin. Priority?",
+ options: [
+  { t: "Reassess in 15 minutes", unsafe: true, reason: "Delay bias" },
+  { t: "Check blood pressure and pulse immediately", unsafe: false },
+  { t: "Document findings", unsafe: true, reason: "Documentation reflex" },
+  { t: "Notify physician after assessment", unsafe: true, reason: "Delayed action" }
+ ]
+},
+
+/* ===== MODULE: MEDICATIONS ===== */
+{
+ q: "Medication order seems unusually high. What is the best action?",
+ options: [
+  { t: "Administer as written to avoid delay", unsafe: true, reason: "Unsafe obedience" },
+  { t: "Clarify the order before administration", unsafe: false },
+  { t: "Document concern and proceed", unsafe: true, reason: "Scope violation" },
+  { t: "Ask another nurse later", unsafe: true, reason: "Delay" }
+ ]
+},
+
+/* ===== MODULE: INFECTION CONTROL ===== */
+{
+ q: "Patient with suspected sepsis has fever and tachycardia. Priority?",
+ options: [
+  { t: "Apply standard precautions and monitor", unsafe: true, reason: "Passive response" },
+  { t: "Document abnormal vitals", unsafe: true, reason: "Documentation trap" },
+  { t: "Initiate sepsis protocol per facility policy", unsafe: false },
+  { t: "Wait for lab confirmation", unsafe: true, reason: "Delay bias" }
+ ]
+}
+
+/* 🔴 QUESTIONS 6–100 FOLLOW EXACT SAME STRUCTURE
+   🔴 Each wrong option uses misleading wording:
+      document / monitor / notify / reassess / wait / clarify later
+   🔴 Each correct option is conservative + immediate + in scope
+*/
+];
+
+function startExam() {
+  user = document.getElementById("userId").value;
+  if (!user) return alert("Enter User ID");
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("examScreen").classList.remove("hidden");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  if (current >= questions.length || failed) return endExam();
+  const q = questions[current];
+  document.getElementById("qNumber").innerText = `Question ${current + 1}`;
+  document.getElementById("questionText").innerText = q.q;
+  const optDiv = document.getElementById("options");
+  optDiv.innerHTML = "";
+
+  q.options.forEach(o => {
+    const btn = document.createElement("button");
+    btn.className = "option";
+    btn.innerText = o.t;
+    btn.onclick = () => selectOption(o);
+    optDiv.appendChild(btn);
+  });
+}
+
+function selectOption(option) {
+  if (option.unsafe) {
+    failed = true;
+    failReason = option.reason;
+  }
+  current++;
+  loadQuestion();
+}
+
+function endExam() {
+  document.getElementById("examScreen").classList.add("hidden");
+  document.getElementById("resultScreen").classList.remove("hidden");
+  document.getElementById("finalResult").innerHTML =
+    failed ? "<span class='fail'>FAIL</span>" : "<span class='pass'>PASS</span>";
+  document.getElementById("failReason").innerText =
+    failed ? "Failure reason: " + failReason : "Safe decision-making demonstrated.";
+}
+
+function showDashboard() {
+  document.getElementById("dashboard").classList.remove("hidden");
+  document.getElementById("dUser").innerText = user;
+  document.getElementById("dResult").innerText = failed ? "FAIL" : "PASS";
+  document.getElementById("dRisk").innerText = failed ? failReason : "None";
+}
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
 <title>SCFHS Prometric Fast-Fail System</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
