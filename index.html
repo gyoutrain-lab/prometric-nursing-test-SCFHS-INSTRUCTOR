@@ -153,7 +153,220 @@ const questions = [
   { t: "Wait for lab confirmation", unsafe: true, reason: "Delay bias" }
  ]
 }
+/* EASY 1–8 */
+{module:"AIRWAY",level:"EASY",stem:"SpO₂ drops to 84% suddenly.",options:[
+{text:"Document finding",correct:false,reason:"Delay"},
+{text:"Notify physician",correct:false,reason:"Waiting"},
+{text:"Apply oxygen and assess airway",correct:true},
+{text:"Reassure patient",correct:false,reason:"Unsafe reassurance"}]},
+{module:"AIRWAY",level:"EASY",stem:"Patient coughing, unable to speak.",options:[
+{text:"Call physician",correct:false,reason:"Delay"},
+{text:"Encourage relaxation",correct:false,reason:"No intervention"},
+{text:"Perform choking intervention",correct:true},
+{text:"Document event",correct:false,reason:"Paperwork trap"}]},
+{module:"AIRWAY",level:"EASY",stem:"Labored breathing noted.",options:[
+{text:"Monitor closely",correct:false,reason:"Delay"},
+{text:"Prepare report",correct:false,reason:"Non-action"},
+{text:"Position and assess airway",correct:true},
+{text:"Notify later",correct:false,reason:"Waiting"}]},
+{module:"AIRWAY",level:"EASY",stem:"Snoring respirations heard.",options:[
+{text:"Document sound",correct:false,reason:"Delay"},
+{text:"Monitor",correct:false,reason:"No airway action"},
+{text:"Open airway",correct:true},
+{text:"Wait for MD",correct:false,reason:"Unsafe wait"}]},
+{module:"AIRWAY",level:"EASY",stem:"Patient restless, hypoxic.",options:[
+{text:"Reassure",correct:false,reason:"False calm"},
+{text:"Chart behavior",correct:false,reason:"Delay"},
+{text:"Apply oxygen",correct:true},
+{text:"Notify physician",correct:false,reason:"Waiting"}]},
+{module:"AIRWAY",level:"EASY",stem:"Secretions blocking airway.",options:[
+{text:"Document",correct:false,reason:"Delay"},
+{text:"Wait suction order",correct:false,reason:"Scope misunderstanding"},
+{text:"Clear airway per protocol",correct:true},
+{text:"Monitor",correct:false,reason:"Unsafe"}]},
+{module:"AIRWAY",level:"EASY",stem:"Shortness of breath increases.",options:[
+{text:"Observe",correct:false,reason:"Delay"},
+{text:"Prepare note",correct:false,reason:"Paperwork"},
+{text:"Assess airway and breathing",correct:true},
+{text:"Call MD",correct:false,reason:"Waiting"}]},
+{module:"AIRWAY",level:"EASY",stem:"Patient gasping.",options:[
+{text:"Document",correct:false,reason:"Delay"},
+{text:"Reassure",correct:false,reason:"Unsafe"},
+{text:"Immediate airway support",correct:true},
+{text:"Notify physician",correct:false,reason:"Waiting"}]},
 
+/* MEDIUM 9–15 */
+{module:"AIRWAY",level:"MEDIUM",stem:"Asthma patient wheezing, alert.",options:[
+{text:"Monitor",correct:false,reason:"Delay"},
+{text:"Document",correct:false,reason:"Trap"},
+{text:"Give prescribed bronchodilator",correct:true},
+{text:"Notify physician",correct:false,reason:"Waiting"}]},
+{module:"AIRWAY",level:"MEDIUM",stem:"Post-op patient shallow breathing.",options:[
+{text:"Reassess later",correct:false,reason:"Delay"},
+{text:"Chart findings",correct:false,reason:"Paperwork"},
+{text:"Stimulate and assess airway",correct:true},
+{text:"Call MD",correct:false,reason:"Waiting"}]},
+{module:"AIRWAY",level:"MEDIUM",stem:"O₂ mask displaced.",options:[
+{text:"Document",correct:false,reason:"Delay"},
+{text:"Notify nurse later",correct:false,reason:"Waiting"},
+{text:"Reapply immediately",correct:true},
+{text:"Monitor",correct:false,reason:"Unsafe"}]},
+{module:"AIRWAY",level:"MEDIUM",stem:"Tracheostomy secretions visible.",options:[
+{text:"Chart amount",correct:false,reason:"Delay"},
+{text:"Wait order",correct:false,reason:"Scope error"},
+{text:"Clear airway per protocol",correct:true},
+{text:"Observe",correct:false,reason:"Unsafe"}]},
+{module:"AIRWAY",level:"MEDIUM",stem:"Oxygen tubing disconnected.",options:[
+{text:"Document",correct:false,reason:"Delay"},
+{text:"Notify MD",correct:false,reason:"Waiting"},
+{text:"Reconnect immediately",correct:true},
+{text:"Monitor",correct:false,reason:"Unsafe"}]},
+{module:"AIRWAY",level:"MEDIUM",stem:"Patient anxious, RR rising.",options:[
+{text:"Reassure only",correct:false,reason:"False calm"},
+{text:"Chart anxiety",correct:false,reason:"Delay"},
+{text:"Assess airway and breathing",correct:true},
+{text:"Notify physician",correct:false,reason:"Waiting"}]},
+{module:"AIRWAY",level:"MEDIUM",stem:"Coughing with cyanosis.",options:[
+{text:"Observe",correct:false,reason:"Delay"},
+{text:"Document",correct:false,reason:"Trap"},
+{text:"Support airway immediately",correct:true},
+{text:"Call MD",correct:false,reason:"Waiting"}]},
+
+/* AUTOFAIL 16–20 */
+{module:"AIRWAY",level:"AUTOFAIL",stem:"Unconscious, snoring respirations.",options:[
+{text:"Monitor",correct:false,reason:"Airway ignored"},
+{text:"Document",correct:false,reason:"Delay"},
+{text:"Open airway and activate emergency",correct:true},
+{text:"Wait for physician",correct:false,reason:"Unsafe wait"}]},
+{module:"AIRWAY",level:"AUTOFAIL",stem:"Apnea observed.",options:[
+{text:"Chart finding",correct:false,reason:"Catastrophic delay"},
+{text:"Notify MD",correct:false,reason:"Waiting"},
+{text:"Initiate emergency response",correct:true},
+{text:"Observe",correct:false,reason:"Fatal"}]},
+{module:"AIRWAY",level:"AUTOFAIL",stem:"Foreign body obstruction.",options:[
+{text:"Document",correct:false,reason:"Delay"},
+{text:"Wait order",correct:false,reason:"Unsafe"},
+{text:"Immediate airway intervention",correct:true},
+{text:"Monitor",correct:false,reason:"Fatal"}]},
+{module:"AIRWAY",level:"AUTOFAIL",stem:"No breath sounds.",options:[
+{text:"Reassess later",correct:false,reason:"Delay"},
+{text:"Chart",correct:false,reason:"Trap"},
+{text:"Emergency airway action",correct:true},
+{text:"Notify MD",correct:false,reason:"Waiting"}]},
+{module:"AIRWAY",level:"AUTOFAIL",stem:"Severe hypoxia persists.",options:[
+{text:"Document",correct:false,reason:"Delay"},
+{text:"Wait labs",correct:false,reason:"Unsafe"},
+{text:"Immediate life-saving airway care",correct:true},
+{text:"Monitor",correct:false,reason:"Fatal"}]},
+
+/* =================================================
+   CIRCULATION (20)
+================================================= */
+/* EASY */
+{module:"CIRCULATION",level:"EASY",stem:"Active bleeding noted.",options:[
+{text:"Document",correct:false,reason:"Delay"},
+{text:"Notify MD",correct:false,reason:"Waiting"},
+{text:"Apply direct pressure",correct:true},
+{text:"Monitor vitals",correct:false,reason:"Unsafe"}]},
+{module:"CIRCULATION",level:"EASY",stem:"BP 86/50, dizzy.",options:[
+{text:"Recheck later",correct:false,reason:"Delay"},
+{text:"Chart",correct:false,reason:"Trap"},
+{text:"Position and assess circulation",correct:true},
+{text:"Notify physician",correct:false,reason:"Waiting"}]},
+{module:"CIRCULATION",level:"EASY",stem:"Tachycardia present.",options:[
+{text:"Document",correct:false,reason:"Delay"},
+{text:"Observe",correct:false,reason:"Unsafe"},
+{text:"Assess circulation immediately",correct:true},
+{text:"Call MD",correct:false,reason:"Waiting"}]},
+{module:"CIRCULATION",level:"EASY",stem:"Cold, clammy skin.",options:[
+{text:"Chart",correct:false,reason:"Delay"},
+{text:"Monitor",correct:false,reason:"Unsafe"},
+{text:"Assess for shock",correct:true},
+{text:"Notify later",correct:false,reason:"Waiting"}]},
+{module:"CIRCULATION",level:"EASY",stem:"Bleeding through dressing.",options:[
+{text:"Document",correct:false,reason:"Delay"},
+{text:"Wait order",correct:false,reason:"Unsafe"},
+{text:"Reinforce pressure",correct:true},
+{text:"Monitor",correct:false,reason:"Unsafe"}]},
+{module:"CIRCULATION",level:"EASY",stem:"Weak pulse noted.",options:[
+{text:"Chart",correct:false,reason:"Delay"},
+{text:"Observe",correct:false,reason:"Unsafe"},
+{text:"Assess circulation now",correct:true},
+{text:"Notify MD",correct:false,reason:"Waiting"}]},
+{module:"CIRCULATION",level:"EASY",stem:"Sudden dizziness standing.",options:[
+{text:"Document",correct:false,reason:"Delay"},
+{text:"Monitor",correct:false,reason:"Unsafe"},
+{text:"Assist to safe position",correct:true},
+{text:"Notify MD",correct:false,reason:"Waiting"}]},
+{module:"CIRCULATION",level:"EASY",stem:"Pale appearance.",options:[
+{text:"Chart",correct:false,reason:"Delay"},
+{text:"Observe",correct:false,reason:"Unsafe"},
+{text:"Assess perfusion",correct:true},
+{text:"Call physician",correct:false,reason:"Waiting"}]},
+
+/* MEDIUM */
+{module:"CIRCULATION",level:"MEDIUM",stem:"Post-op tachycardia.",options:[
+{text:"Monitor",correct:false,reason:"Delay"},
+{text:"Document",correct:false,reason:"Trap"},
+{text:"Assess bleeding and perfusion",correct:true},
+{text:"Notify MD",correct:false,reason:"Waiting"}]},
+{module:"CIRCULATION",level:"MEDIUM",stem:"Orthostatic hypotension.",options:[
+{text:"Reassess later",correct:false,reason:"Delay"},
+{text:"Chart",correct:false,reason:"Trap"},
+{text:"Position safely",correct:true},
+{text:"Call MD",correct:false,reason:"Waiting"}]},
+{module:"CIRCULATION",level:"MEDIUM",stem:"Rapid pulse after surgery.",options:[
+{text:"Monitor",correct:false,reason:"Delay"},
+{text:"Document",correct:false,reason:"Trap"},
+{text:"Assess circulation immediately",correct:true},
+{text:"Notify physician",correct:false,reason:"Waiting"}]},
+{module:"CIRCULATION",level:"MEDIUM",stem:"Cool extremities.",options:[
+{text:"Observe",correct:false,reason:"Delay"},
+{text:"Chart",correct:false,reason:"Trap"},
+{text:"Assess perfusion",correct:true},
+{text:"Notify MD",correct:false,reason:"Waiting"}]},
+{module:"CIRCULATION",level:"MEDIUM",stem:"Sudden weakness.",options:[
+{text:"Document",correct:false,reason:"Delay"},
+{text:"Monitor",correct:false,reason:"Unsafe"},
+{text:"Assess circulation",correct:true},
+{text:"Call MD",correct:false,reason:"Waiting"}]},
+{module:"CIRCULATION",level:"MEDIUM",stem:"Hypotension after meds.",options:[
+{text:"Recheck later",correct:false,reason:"Delay"},
+{text:"Chart",correct:false,reason:"Trap"},
+{text:"Support circulation",correct:true},
+{text:"Notify MD",correct:false,reason:"Waiting"}]},
+{module:"CIRCULATION",level:"MEDIUM",stem:"Decreased urine output.",options:[
+{text:"Document",correct:false,reason:"Delay"},
+{text:"Observe",correct:false,reason:"Unsafe"},
+{text:"Assess perfusion",correct:true},
+{text:"Notify MD",correct:false,reason:"Waiting"}]},
+
+/* AUTOFAIL */
+{module:"CIRCULATION",level:"AUTOFAIL",stem:"Sudden hypotension, pale.",options:[
+{text:"Chart",correct:false,reason:"Critical delay"},
+{text:"Wait labs",correct:false,reason:"Unsafe"},
+{text:"Emergency circulation support",correct:true},
+{text:"Notify MD only",correct:false,reason:"Incomplete"}]},
+{module:"CIRCULATION",level:"AUTOFAIL",stem:"Massive bleeding.",options:[
+{text:"Document",correct:false,reason:"Delay"},
+{text:"Call physician",correct:false,reason:"Waiting"},
+{text:"Immediate hemorrhage control",correct:true},
+{text:"Monitor",correct:false,reason:"Fatal"}]},
+{module:"CIRCULATION",level:"AUTOFAIL",stem:"Signs of shock.",options:[
+{text:"Observe",correct:false,reason:"Delay"},
+{text:"Chart",correct:false,reason:"Trap"},
+{text:"Activate emergency response",correct:true},
+{text:"Notify MD",correct:false,reason:"Waiting"}]},
+{module:"CIRCULATION",level:"AUTOFAIL",stem:"Collapse with weak pulse.",options:[
+{text:"Document",correct:false,reason:"Delay"},
+{text:"Wait help",correct:false,reason:"Unsafe"},
+{text:"Immediate emergency action",correct:true},
+{text:"Monitor",correct:false,reason:"Fatal"}]},
+{module:"CIRCULATION",level:"AUTOFAIL",stem:"Post-op hemorrhage suspected.",options:[
+{text:"Chart",correct:false,reason:"Delay"},
+{text:"Observe",correct:false,reason:"Unsafe"},
+{text:"Emergency circulation support",correct:true},
+{text:"Notify MD",correct:false,reason:"Waiting"}]},
 /* 🔴 QUESTIONS 6–100 FOLLOW EXACT SAME STRUCTURE
    🔴 Each wrong option uses misleading wording:
       document / monitor / notify / reassess / wait / clarify later
